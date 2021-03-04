@@ -22,6 +22,7 @@ export default {
   box-shadow: 2px 10px 28px rgba(75, 0, 129, 0.12);
   border-radius: 10px;
   padding: 60px;
+  box-sizing: border-box;
   & > h1 {
     display: flex;
     width: 100%;

@@ -11,8 +11,8 @@ module.exports = {
       return {
         devServer: {
           proxy: {
-            '/admin-ds': {
-              target: 'http://localhost:3555/',
+            '/api/': {
+              target: ' http://localhost:3000',
               secure: false,
               changeOrigin: true,
             },

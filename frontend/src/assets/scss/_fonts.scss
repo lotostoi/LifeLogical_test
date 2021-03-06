@@ -1,11 +1,33 @@
-
 @font-face {
-    font-family: "Montserrat regular";
-    src: url("../font/Montserrat/montserrat-regular-webfont.eot");
-    src: url("../font/Montserrat/montserrat-regular-webfont.eot?#iefix") format("embedded-opentype"),
-      url("../font/Montserrat/montserrat-regular-webfont.woff2") format("woff2"),
-      url("../font/Montserrat/montserrat-regular-webfont.woff") format("woff"),
-      url("../font/Montserrat/montserrat-regular.ttf") format("ttf");
+    font-family: "Noto Sans";
+    src: url("~@/assets/fonts/Noto_Sans/NotoSans-Regular.woff2") format("woff2"),
+        url("~@/assets/fonts/Noto_Sans/NotoSans-Regular.woff") format("woff");
     font-weight: normal;
     font-style: normal;
-  }
+}
+@font-face {
+    font-family: "Objective Bold";
+    src: url("~@/assets/fonts/Objective/Objective-Bold.woff2") format("woff2"),
+        url("~@/assets/fonts/Objective/Objective-Bold.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Objective Medium";
+    src: url("~@/assets/fonts/Objective/Objective-Medium.woff2") format("woff2"),
+        url("~@/assets/fonts/Objective/Objective-Medium.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Objective Regular";
+    src: url("~@/assets/fonts/Objective/Objective-Regular.woff2") format("woff2"),
+        url("~@/assets/fonts/Objective/Objective-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+$ns: "Noto Sans", "Arial", Sans-serif;
+$obj-bold: "Objective Bold", "Arial", Sans-serif;
+$obj-med: "Objective Medium", "Arial", Sans-serif;
+$obj-reg: "Objective Regular", "Arial", Sans-serif;

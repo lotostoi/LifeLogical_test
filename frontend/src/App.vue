@@ -1,14 +1,16 @@
 <template>
-  <Header></Header>
+  <app-header></app-header>
   <main>
     <router-view />
   </main>
+  <app-footer></app-footer>
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
+import AppHeader from "@/components/Header.vue";
+import AppFooter from "@/components/Footer.vue";
 export default {
-  components: { Header },
+  components: { AppHeader, AppFooter },
 };
 </script>
 
@@ -23,6 +25,7 @@ export default {
   display: flex;
   color: #2c3e50;
   flex-direction: column;
+  box-sizing: border-box;
   &::before {
     content: "";
     display: block;
@@ -43,11 +46,12 @@ export default {
   }
 }
 main {
-  padding: 152px 0;
+  padding: 152px 20px;
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  box-sizing: border-box;
 }
 </style>

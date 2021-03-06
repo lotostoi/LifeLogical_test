@@ -1,3 +1,12 @@
+@mixin mq($width, $type: min) {
+  @if $type==max {
+    $width: $width - 1px;
+  }
+  @media only screen and (#{$type}-width: $width) {
+    @content;
+  }
+}
+
 @mixin placeholder {
   &::-webkit-input-placeholder {
     @content;
@@ -10,5 +19,57 @@
   }
   &:-ms-input-placeholder {
     @content;
+  }
+}
+
+@mixin logo-hover {
+  &:hover {
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+}
+@mixin logo-hover-off {
+  &:hover {
+    transform: scale(1);
+  }
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+@mixin dark-link-hover {
+  &:hover {
+    color: darken($light-color, 10%);
+  }
+  &:active {
+    color: darken($light-color, 25%);
+  }
+}
+@mixin dark-link-hover-off {
+  &:hover {
+    color: $light-color;
+  }
+  &:active {
+    color: darken($light-color, 25%);
+  }
+}
+
+@mixin light-link-hover {
+  &:hover {
+    color: $dark-color;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@mixin light-link-hover-off {
+  &:hover {
+    color: $base-color;
+  }
+  &:active {
+    transform: scale(1);
   }
 }

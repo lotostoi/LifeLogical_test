@@ -1,22 +1,22 @@
 <template>
   <section class="contacts">
     <h1>Get In Touch</h1>
-    <feed-back></feed-back>
+    <my-feed-back />
   </section>
 </template>
 
 <script>
-import FeedBack from "@/components/Feedback.vue";
+import MyFeedBack from "@/components/Feedback.vue";
 
 export default {
-  components: { FeedBack },
+  components: { MyFeedBack },
 };
 </script>
 
 <style lang="scss" scoped>
 .contacts {
   width: 100%;
-  max-width: $body-width;
+  max-width: calc(#{$body-width} - 50px);
   min-height: 638px;
   background: #ffffff;
   box-shadow: 2px 10px 28px rgba(75, 0, 129, 0.12);
@@ -24,9 +24,10 @@ export default {
   padding: 60px;
   box-sizing: border-box;
   & > h1 {
+    font-family: $ns;
     display: flex;
     width: 100%;
-    max-width: 146px;
+    max-width: 147px;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
@@ -46,6 +47,19 @@ export default {
       background: $base-color;
       border-radius: 2px;
     }
+  }
+}
+
+@include mq(768, max) {
+  .contacts {
+    width: 100%;
+    max-width: calc(#{$body-width} - 50px);
+    min-height: 638px;
+    background: #ffffff;
+    box-shadow: 2px 10px 28px rgba(75, 0, 129, 0.12);
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
   }
 }
 </style>

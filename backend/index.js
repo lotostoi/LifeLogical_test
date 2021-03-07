@@ -5,7 +5,7 @@ const express = require('express')
 const app = express()
 const multer = require('multer')
 const history = require('connect-history-api-fallback')
-
+const { auth } = require('./config')
 
 app.use(history())
 
@@ -17,17 +17,9 @@ app.use('/', express.static('./../frontend/dist'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-const sender = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'lotostoii@gmail.com',
-        pass: 'EUDaawww1'
-    }
-})
+const sender = nodemailer.createTransport(auth)
 
-app.post('/api/sendEmail', upload.array('test_file'), async (req, res) => {
-
-    console.log(req.files);
+app.post('/api/sendEmail', upload.array('test_file'), (req, res) => {
 
     const attachments = req.files.map(file => {
         return {

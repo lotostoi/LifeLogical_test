@@ -36,8 +36,11 @@ app.post('/api/sendEmail', upload.array('test_file'), (req, res) => {
         attachments
     }
 
+    console.log(mail);
+
     sender.sendMail(mail, function (error, info) {
         if (error) {
+            console.log(error);
             res.status(400).json({ result: false })
         } else {
             console.log("Email sent successfully: "

@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="header-content">
-      <router-link :to="{ name: 'Contacts' }" class="logo"></router-link>
+      <router-link :to="{ name: 'Home' }" class="logo"></router-link>
       <i class="fa fa-bars" aria-hidden="true" @click="show = !show"></i>
       <nav class="nav" :class="show ? 'active' : ''">
         <router-link

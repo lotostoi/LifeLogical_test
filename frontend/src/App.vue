@@ -2,7 +2,15 @@
   <app-alert></app-alert>
   <app-header></app-header>
   <main>
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <transition
+        enter-active-class="page-enter"
+        leave-active-class="page-leave"
+        mode="out-in"
+      >
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </main>
   <app-footer></app-footer>
 </template>
@@ -10,13 +18,13 @@
 <script>
 import AppHeader from "@/components/Header.vue";
 import AppFooter from "@/components/Footer.vue";
-import AppAlert from "@/components/Alert.vue"
+import AppAlert from "@/components/Alert.vue";
 export default {
   components: { AppHeader, AppFooter, AppAlert },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 #app {
   width: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -55,5 +63,33 @@ main {
   align-items: center;
   justify-content: flex-start;
   box-sizing: border-box;
+}
+$time: 0.3s;
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes page-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
+
+.page-leave {
+  animation: page-leave $time;
+}
+.page-enter {
+  animation: page-enter $time;
 }
 </style>

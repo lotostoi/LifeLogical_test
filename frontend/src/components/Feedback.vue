@@ -54,8 +54,8 @@
           <input
             type="file"
             id="load-file"
-            name="test_file"
-            multiple
+            name="test_file[]"
+            multiple="multiple"
             @input="loadFiles($event)"
           />
           <transition v-if="!statusDrop" name="top-bot">
@@ -103,6 +103,7 @@
 <script>
 import { mapActions } from "vuex";
 import { catString, bytesToSize } from "@/functions/functions";
+import { sendEmail } from "@/api/api";
 export default {
   data() {
     return {
@@ -175,11 +176,7 @@ export default {
         this.startValid = true;
         if (!this.isValidForm) return;
         this.disabled = true;
-        const response = await fetch("/api/sendEmail", {
-          method: "POST",
-          body: new FormData(this.$el),
-        });
-        const { result } = await response.json();
+        const result = await sendEmail(new FormData(this.$el));
         if (result) {
           this.initFields();
           this.addMessage({
@@ -201,10 +198,6 @@ export default {
         });
         this.disabled = false;
       }
-    },
-
-    openLoadWindow() {
-      this.$el.querySelector("#load-file").click();
     },
 
     readyDrop() {
@@ -238,7 +231,11 @@ export default {
 
     delFile(file) {
       const colection = this.$el.querySelector("#load-file");
-      this.files.items.remove(file);
+      const newColection = Object.values(this.files.files).filter(
+        (f) => f.name !== file.name
+      );
+      this.files.items.clear();
+      newColection.forEach((file) => this.files.items.add(file));
       colection.files = this.files.files;
       this.filesForShow = this.getFiles(colection.files);
     },
@@ -275,13 +272,6 @@ export default {
   computed: {
     isValidForm() {
       return this.fields.every((field) => field.isValid);
-    },
-    setClasses() {
-      return startValid && field.isValid
-        ? "saccess"
-        : startValid && !field.isValid
-        ? "error"
-        : "";
     },
   },
 };
@@ -677,30 +667,27 @@ export default {
     transform: rotate(360deg);
   }
 }
-/* @keyframes leave {
-  from {
-    opacity: 1;
-    transform: scale(1);
-  }
-  to {
-    transform: scale(0);
-    opacity: 0;
+
+@include mq($hover-off, max) {
+  .feedback {
+    & > button {
+      &:hover {
+        background-color: $base-color;
+      }
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+    & > button.block {
+      cursor: not-allowed;
+      background-color: darken($gray-color, 10%);
+      &:hover {
+        background-color: darken($gray-color, 10%);
+      }
+      &:active {
+        transform: scale(1);
+      }
+    }
   }
 }
-@keyframes enter {
-  from {
-    transform: scale(0);
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.leave {
-  animation: leave 0.3s linear forwards;
-}
-.enter {
-  animation: enter 0.3s linear forwards;
-} */
 </style>

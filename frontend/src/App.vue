@@ -1,4 +1,5 @@
 <template>
+  <app-alert></app-alert>
   <app-header></app-header>
   <main>
     <router-view />
@@ -9,8 +10,9 @@
 <script>
 import AppHeader from "@/components/Header.vue";
 import AppFooter from "@/components/Footer.vue";
+import AppAlert from "@/components/Alert.vue"
 export default {
-  components: { AppHeader, AppFooter },
+  components: { AppHeader, AppFooter, AppAlert },
 };
 </script>
 

@@ -1,12 +1,11 @@
 import { createStore } from 'vuex'
 
+import alerts from "@/store/Alert"
+
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+  namespaced: true,
   modules: {
-  }
+    alerts
+  },
+  strict: process.env.NODE_ENV !== 'production',
 })

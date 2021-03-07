@@ -1,8 +1,5 @@
 <template>
   <form class="feedback">
-    <div v-if="showMessage" class="message">
-      <p>Your message has been successfully sent</p>
-    </div>
     <h3>Leave us a message</h3>
     <div class="form-body">
       <div class="fields">
@@ -52,6 +49,7 @@
           @dragenter.prevent="readyDrop"
           @dragleave.prevent="stopDrop"
           @drop.prevent="drop($event)"
+          :class="statusDrop ? 'active' : ''"
         >
           <input
             type="file"
@@ -70,6 +68,7 @@
           <p v-if="!statusDrop">Drag your files here.</p>
           <p v-if="!statusDrop">Maximum size: 2mb</p>
         </div>
+
         <div v-if="filesForShow.length" class="files">
           <div v-for="(file, i) in filesForShow" :key="i" class="file">
             <i class="fa fa-file-image-o icon" aria-hidden="true"></i>
@@ -79,6 +78,7 @@
               class="fa fa-trash del"
               aria-hidden="true"
               @click.prevent="delFile(file)"
+              :disabled="disabled"
             ></i>
           </div>
         </div>
@@ -101,14 +101,15 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { catString, bytesToSize } from "@/functions/functions";
 export default {
   data() {
     return {
       startValid: false,
       statusDrop: false,
       filesForShow: [],
-      files: new DataTransfer(),
-      showMessage: false,
+      files: null,
       disabled: false,
       fields: [
         {
@@ -142,13 +143,25 @@ export default {
     };
   },
   mounted() {
-    this.fields = this.fields.map((field) => ({
-      ...field,
-      isValid: false,
-      value: "",
-    }));
+    this.initFields();
   },
+
   methods: {
+    initFields() {
+      this.fields = this.fields.map((field) => ({
+        ...field,
+        isValid: false,
+        value: "",
+      }));
+      this.filesForShow = [];
+      if (this.files instanceof DataTransfer) {
+        this.files.items.clear();
+      } else {
+        this.files = new DataTransfer();
+      }
+      this.startValid = false;
+    },
+
     valid(field) {
       if (new RegExp(...field.regExp).test(field.value)) {
         field.isValid = true;
@@ -156,6 +169,7 @@ export default {
         field.isValid = false;
       }
     },
+
     async sentForm() {
       try {
         this.startValid = true;
@@ -165,19 +179,27 @@ export default {
           method: "POST",
           body: new FormData(this.$el),
         });
-        const result = await response.json();
-        this.fields = this.fields.map((f) => {
-          f.value = "";
-          f.isValid = false;
-          return f;
-        });
-        this.filesForShow = [];
-        this.files = new DataTransfer();
+        const { result } = await response.json();
+        if (result) {
+          this.initFields();
+          this.addMessage({
+            timeout: 3000,
+            text: "Message sent successfully",
+            type: "success",
+          });
+        } else {
+          this.addMessage({
+            timeout: 3000,
+            text: "Error on server",
+          });
+        }
         this.disabled = false;
-        this.startValid = false;
-        this.messageOn()
       } catch (e) {
-        console.log(e);
+        this.addMessage({
+          timeout: 3000,
+          text: "Error sending message",
+        });
+        this.disabled = false;
       }
     },
 
@@ -191,24 +213,21 @@ export default {
     stopDrop() {
       this.statusDrop = false;
     },
+
     drop(e) {
       const newFiles = Object.values(e.dataTransfer.files);
-      newFiles.forEach((file) => {
-        this.files.items.add(file);
-      });
+      this.changeColection(newFiles);
       const colection = this.$el.querySelector("#load-file");
       colection.files = this.files.files;
-      this.statusDrop = false;
       this.filesForShow = this.getFiles(colection.files);
+      this.statusDrop = false;
     },
+
     loadFiles(e) {
       const newFiles = Object.values(e.target.files);
-      newFiles.forEach((file) => {
-        this.files.items.add(file);
-      });
+      this.changeColection(newFiles);
       e.target.files = this.files.files;
       this.filesForShow = this.getFiles(e.target.files);
-      console.log(e.target.files);
     },
 
     getFiles(colection) {
@@ -219,37 +238,40 @@ export default {
 
     delFile(file) {
       const colection = this.$el.querySelector("#load-file");
-      const newFiles = Object.values(this.files.files).filter(
-        (f) => f.name !== file.name
-      );
-      this.files = new DataTransfer();
-      newFiles.forEach((file) => {
-        this.files.items.add(file);
-      });
+      this.files.items.remove(file);
       colection.files = this.files.files;
       this.filesForShow = this.getFiles(colection.files);
-      console.log(colection.files);
+    },
+
+    changeColection(newFiles) {
+      newFiles.forEach((file) => {
+        if (file.size > 1048576 * 2) {
+          this.addMessage({
+            timeout: 3000,
+            text: `File ${this.catString(file.name)} more then 2MB`,
+          });
+        } else {
+          const files = Object.values(this.files.files);
+          if (!files.find((f) => f.name == file.name)) {
+            this.files.items.add(file);
+          }
+        }
+      });
     },
 
     catString(string) {
-      if (string.length > 10) {
-        string = "..." + string.slice(string.length - 10);
-      }
-      return string;
+      return catString(string);
     },
 
     bytesToSize(bytes) {
-      const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-      if (bytes == 0) return "0 Byte";
-      const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-      return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+      return bytesToSize(bytes);
     },
 
-    messageOn() {
-      this.showMessage = true;
-      setTimeout(() => (this.showMessage = false), 3000);
-    },
+    ...mapActions({
+      addMessage: "alerts/add",
+    }),
   },
+
   computed: {
     isValidForm() {
       return this.fields.every((field) => field.isValid);
@@ -267,18 +289,6 @@ export default {
 
 
 <style lang="scss">
-.message {
-  width: 200px;
-  position: fixed;
-  right: 20px;
-  top: 20px;
-  z-index: 500;
-  border: 1px solid $base-color;
-  border-radius: 10px;
-  background-color: darken($base-color, 0.5);
-  color: $light-color;
-  font-size: 1.5rem;
-}
 .feedback {
   display: flex;
   flex-direction: column;
@@ -449,7 +459,9 @@ export default {
       margin: 0;
       font-family: $ns;
     }
+
     & > .load-area {
+      cursor: pointer;
       margin-top: 48px;
       width: 100%;
       background: #f9f9fb;
@@ -461,9 +473,15 @@ export default {
       transition: transform 0.3s;
       &:hover {
         background-color: darken(#f9f9fb, 5%);
-        transform: scale(1.01);
+        border-width: 2px;
+        border-color: $dark-color;
+      }
+      &:active {
+        background-color: darken(#f9f9fb, 5%);
+        transform: scale(0.9);
       }
       & > #load-file {
+        cursor: pointer;
         position: absolute;
         top: 0;
         left: 0;
@@ -512,6 +530,11 @@ export default {
         font-family: $ns;
       }
     }
+    & > .load-area.active {
+      background-color: darken(#f9f9fb, 5%);
+      border-width: 2px;
+      border-color: $dark-color;
+    }
     & > .files {
       display: flex;
       margin-top: 10px;
@@ -536,10 +559,10 @@ export default {
           cursor: pointer;
           margin-left: auto;
           margin-right: 10px;
-          color: $error-color;
+          color: $base-color;
           font-size: 18px;
           &:hover {
-            color: darken($error-color, 20%);
+            color: $error-color, 20%;
           }
           &:active {
             transform: scale(0.9);
@@ -576,6 +599,33 @@ export default {
       margin-left: 0;
     }
   }
+}
+
+@keyframes f-leave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+@keyframes f-enter {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.leave {
+  animation: f-leave 0.3s linear forwards;
+}
+.enter {
+  animation: f-enter 0.3s linear forwards;
 }
 
 @keyframes top-bot {
@@ -627,4 +677,30 @@ export default {
     transform: rotate(360deg);
   }
 }
+/* @keyframes leave {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+@keyframes enter {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.leave {
+  animation: leave 0.3s linear forwards;
+}
+.enter {
+  animation: enter 0.3s linear forwards;
+} */
 </style>

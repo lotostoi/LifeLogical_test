@@ -56,7 +56,7 @@
             <input
               type="file"
               id="load-file"
-              name="test_file[]"
+              name="test_file"
               multiple="multiple"
               @input="loadFiles($event)"
             />

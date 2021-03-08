@@ -1,6 +1,6 @@
 
 export const sendEmail = async (body) => {
-    const response = await fetch("/api/server.php", {
+    const response = await fetch("/api/sendEmail", {
         method: "POST",
         body: body,
     })

@@ -244,7 +244,7 @@ export default {
       const newColection = Object.values(this.files.files).filter(
         (f) => f.name !== file.name
       );
-      this.files.items.clear();
+      this.files = new DataTransfer(); //  this.files.items.clear() I don't know becouse it doesn't work in the Mozila;
       newColection.forEach((file) => this.files.items.add(file));
       colection.files = this.files.files;
       this.filesForShow = this.getFiles(colection.files);

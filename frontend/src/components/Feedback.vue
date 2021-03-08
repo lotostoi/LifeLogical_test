@@ -163,6 +163,7 @@ export default {
         this.files = new DataTransfer();
       }
       this.startValid = false;
+      this.$el.querySelector(".feedback").reset();
     },
 
     valid(field) {

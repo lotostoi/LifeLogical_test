@@ -17,7 +17,7 @@ export default {
   display: flex;
   width: 100%;
   max-width: $max-width;
-  padding: 150px;
+  padding: 13q0px;
   justify-content: center;
 }
 </style>

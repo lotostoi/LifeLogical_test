@@ -113,6 +113,7 @@ export default {
       statusDrop: false,
       filesForShow: [],
       files: null,
+
       disabled: false,
       fields: [
         {
@@ -147,6 +148,7 @@ export default {
   },
   mounted() {
     this.initForm();
+    console.log(this.files);
   },
 
   methods: {
@@ -162,6 +164,7 @@ export default {
       } else {
         this.files = new DataTransfer();
       }
+
       this.startValid = false;
       this.$el.querySelector(".feedback").reset();
     },
@@ -217,10 +220,10 @@ export default {
       const newFiles = Object.values(e.dataTransfer.files);
       this.changeColection(newFiles);
       const colection = this.$el.querySelector("#load-file");
-      if (this.files.files.length > 1) {
+      if (this.files.files.length > 1 && colection.files.length == 0) {
         colection.files = this.files.files;
       }
-      this.filesForShow = this.getFiles(colection.files);
+      this.filesForShow = this.getFiles(this.files.files);
       this.statusDrop = false;
     },
 
@@ -228,7 +231,12 @@ export default {
       const newFiles = Object.values(e.target.files);
       this.changeColection(newFiles);
       if (this.files.files.length > 1) {
-        e.target.files = this.files.files;
+        const nc = new DataTransfer();
+        console.log(nc);
+        Object.values(this.files.files).forEach((file) => {
+          nc.items.add(file);
+        });
+        e.target.files = nc.files;
       }
       this.filesForShow = this.getFiles(this.files.files);
     },

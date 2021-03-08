@@ -56,7 +56,7 @@ export default {
   }
 }
 main {
-  padding: 152px 20px;
+  padding: 20px;
   display: flex;
   width: 100%;
   flex-direction: column;

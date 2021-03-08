@@ -2,9 +2,21 @@
   <header>
     <div class="header-content">
       <router-link :to="{ name: 'Home' }" class="logo"></router-link>
-      <i class="fa fa-bars" aria-hidden="true" @click="show = !show"></i>
+      <i
+        v-if="!show"
+        class="fa fa-bars"
+        @click="show = !show"
+      ></i>
+      <i
+        v-else
+        class="fa fa-times"
+        @click="show = !show"
+      ></i>
       <nav class="nav" :class="show ? 'active' : ''">
         <router-link
+          @click="show = false"
+          exact
+          active-class="active"
           v-for="ref in refs"
           :key="ref.rout"
           :to="{ name: ref.rout }"
@@ -70,6 +82,9 @@ header {
       text-decoration: none;
       @include light-link-hover;
     }
+    & > a.active {
+      color: $dark-color;
+    }
     & > a:not(:last-child) {
       margin-right: 48px;
     }
@@ -101,12 +116,12 @@ header {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 22px;
+      font-size: 30px;
       color: $base-color;
     }
     & > .logo {
-      width: 140px;
-      height: 31px;
+      width: calc(280px / 1.6);
+      height: calc(62px / 1.6);
       background-size: cover;
     }
     & > .nav.active {
@@ -127,6 +142,10 @@ header {
         font-size: 18px;
         line-height: 30px;
         border-top: 1px solid transparentize($base-color, 0.7);
+        background-color: darken($base-color, 50%);
+      }
+      & > a.active {
+        color: $light-color;
       }
       & > a:not(:last-child) {
         margin-right: 0;

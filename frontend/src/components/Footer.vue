@@ -18,7 +18,7 @@
           <a href="#">Privacy Policy</a>
           <a href="#">Terms and Conditions</a>
         </section>
-        <section class="contacts">
+        <section class="footer-contacts">
           <div class="contact">
             <div class="map-mark"></div>
             <p>
@@ -34,10 +34,10 @@
             <p>hello@example.com</p>
           </div>
           <div class="social-networks">
-            <a href="#" class="fa fa-youtube-play" aria-hidden="true"></a>
-            <a href="#" class="fa fa-instagram" aria-hidden="true"></a>
-            <a href="#" class="fa fa-facebook" aria-hidden="true"></a>
-            <a href="#" class="fa fa-twitter" aria-hidden="true"></a>
+            <a href="#" class="fa fa-youtube-play"></a>
+            <a href="#" class="fa fa-instagram"></a>
+            <a href="#" class="fa fa-facebook"></a>
+            <a href="#" class="fa fa-twitter"></a>
           </div>
         </section>
         <section class="map">
@@ -198,7 +198,7 @@ footer {
   }
 }
 
-.info > .contacts {
+.info > .footer-contacts {
   order: 3;
   display: flex;
   flex-direction: column;
@@ -417,7 +417,7 @@ footer {
 }
 
 @include mq(1205, max) {
-  .info > .contacts {
+  .info > .footer-contacts {
     order: 2;
     display: flex;
     flex-direction: column;
@@ -530,7 +530,7 @@ footer {
 }
 
 @include mq(1024, max) {
-  .info > .contacts {
+  .info > .footer-contacts {
     order: 2;
     & > .social-networks {
       & > a {
@@ -574,7 +574,7 @@ footer {
 }
 
 @include mq(700, max) {
-  .info > .contacts {
+  .info > .footer-contacts {
     max-width: 100%;
     align-items: center;
     order: 2;
@@ -624,7 +624,7 @@ footer {
   }
 }
 @include mq(450, max) {
-  .info > .contacts {
+  .info > .footer-contacts {
     max-width: 100%;
     align-items: center;
     order: 2;

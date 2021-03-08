@@ -1,103 +1,105 @@
 <template>
-  <form class="feedback">
-    <h3>Leave us a message</h3>
-    <div class="form-body">
-      <div class="fields">
-        <label for="name" v-for="field in fields" :key="field.name">
-          <span v-if="field.title">Name *</span>
-          <input
-            v-if="field.tagName === 'input'"
-            :type="field.type"
-            :name="field.name"
-            :id="'#' + field.name"
-            :placeholder="field.placeholder"
-            v-model="field.value"
-            @input="valid(field)"
-            :class="
-              startValid && field.isValid
-                ? 'saccess'
-                : startValid && !field.isValid
-                ? 'error'
-                : ''
-            "
-          />
-          <textarea
-            v-else
-            :type="field.type"
-            :name="field.name"
-            :id="'#' + field.name"
-            :placeholder="field.placeholder"
-            v-model="field.value"
-            @input="valid(field)"
-            :class="
-              startValid && field.isValid
-                ? 'saccess'
-                : startValid && !field.isValid
-                ? 'error'
-                : ''
-            "
-          ></textarea>
-          <small v-if="startValid && !field.isValid">
-            {{ field.errorMessage }}</small
+  <section class="contacts">
+    <h1>Get In Touch</h1>
+    <form class="feedback">
+      <h3>Leave us a message</h3>
+      <div class="form-body">
+        <div class="fields">
+          <label for="name" v-for="field in fields" :key="field.name">
+            <span v-if="field.title">Name *</span>
+            <input
+              v-if="field.tagName === 'input'"
+              :type="field.type"
+              :name="field.name"
+              :id="'#' + field.name"
+              :placeholder="field.placeholder"
+              v-model="field.value"
+              @input="valid(field)"
+              :class="
+                startValid && field.isValid
+                  ? 'saccess'
+                  : startValid && !field.isValid
+                  ? 'error'
+                  : ''
+              "
+            />
+            <textarea
+              v-else
+              :type="field.type"
+              :name="field.name"
+              :id="'#' + field.name"
+              :placeholder="field.placeholder"
+              v-model="field.value"
+              @input="valid(field)"
+              :class="
+                startValid && field.isValid
+                  ? 'saccess'
+                  : startValid && !field.isValid
+                  ? 'error'
+                  : ''
+              "
+            ></textarea>
+            <small v-if="startValid && !field.isValid">
+              {{ field.errorMessage }}</small
+            >
+          </label>
+        </div>
+        <div class="files">
+          <h4>Upload your files</h4>
+          <div
+            class="load-area"
+            @dragenter.prevent="readyDrop"
+            @dragleave.prevent="stopDrop"
+            @drop.prevent="drop($event)"
+            :class="statusDrop ? 'active' : ''"
           >
-        </label>
-      </div>
-      <div class="files">
-        <h4>Upload your files</h4>
-        <div
-          class="load-area"
-          @dragenter.prevent="readyDrop"
-          @dragleave.prevent="stopDrop"
-          @drop.prevent="drop($event)"
-          :class="statusDrop ? 'active' : ''"
-        >
-          <input
-            type="file"
-            id="load-file"
-            name="test_file[]"
-            multiple="multiple"
-            @input="loadFiles($event)"
-          />
-          <transition v-if="!statusDrop" name="top-bot">
-            <div class="folder"></div>
-          </transition>
+            <input
+              type="file"
+              id="load-file"
+              name="test_file[]"
+              multiple="multiple"
+              @input="loadFiles($event)"
+            />
+            <transition v-if="!statusDrop" name="top-bot">
+              <div class="folder"></div>
+            </transition>
 
-          <div v-else class="icon-load">
-            <i class="fa fa-download" aria-hidden="true"></i>
+            <div v-else class="icon-load">
+              <i class="fa fa-download"></i>
+            </div>
+            <p v-if="!statusDrop">Drag your files here.</p>
+            <p v-if="!statusDrop">Maximum size: 2mb</p>
           </div>
-          <p v-if="!statusDrop">Drag your files here.</p>
-          <p v-if="!statusDrop">Maximum size: 2mb</p>
-        </div>
 
-        <div v-if="filesForShow.length" class="files">
-          <div v-for="(file, i) in filesForShow" :key="i" class="file">
-            <i class="fa fa-file-image-o icon" aria-hidden="true"></i>
-            <span class="name">{{ catString(file.name) }}</span>
-            <span class="size">{{ bytesToSize(file.size) }}</span>
-            <i
-              class="fa fa-trash del"
-              aria-hidden="true"
-              @click.prevent="delFile(file)"
-              :disabled="disabled"
-            ></i>
+          <div v-if="filesForShow.length" class="files">
+            <div v-for="(file, i) in filesForShow" :key="i" class="file">
+              <i class="fa fa-file-image-o icon"></i>
+              <span class="name">{{ catString(file.name) }}</span>
+              <span class="size">{{ bytesToSize(file.size) }}</span>
+              <i
+                class="fa fa-trash del"
+                @click.prevent="delFile(file)"
+                :disabled="disabled"
+              ></i>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <button
-      @click.prevent="sentForm"
-      :disabled="disabled"
-      :class="{ block: disabled }"
-    >
-      <div v-if="disabled" class="lds-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <span v-else>Send</span>
-    </button>
-  </form>
+      <button
+        @click.prevent="sentForm"
+        :disabled="disabled"
+        :class="{ block: disabled }"
+      >
+        <div v-if="disabled" class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <span v-else>Send</span>
+      </button>
+    </form>
+  </section>
 </template>
 
 <script>
@@ -144,11 +146,11 @@ export default {
     };
   },
   mounted() {
-    this.initFields();
+    this.initForm();
   },
 
   methods: {
-    initFields() {
+    initForm() {
       this.fields = this.fields.map((field) => ({
         ...field,
         isValid: false,
@@ -176,9 +178,11 @@ export default {
         this.startValid = true;
         if (!this.isValidForm) return;
         this.disabled = true;
-        const result = await sendEmail(new FormData(this.$el));
+        const result = await sendEmail(
+          new FormData(this.$el.querySelector(".feedback"))
+        );
         if (result) {
-          this.initFields();
+          this.initForm();
           this.addMessage({
             timeout: 3000,
             text: "Message sent successfully",
@@ -192,6 +196,7 @@ export default {
         }
         this.disabled = false;
       } catch (e) {
+        console.log(e);
         this.addMessage({
           timeout: 3000,
           text: "Error sending message",
@@ -211,7 +216,9 @@ export default {
       const newFiles = Object.values(e.dataTransfer.files);
       this.changeColection(newFiles);
       const colection = this.$el.querySelector("#load-file");
-      colection.files = this.files.files;
+      if (this.files.files.length > 1) {
+        colection.files = this.files.files;
+      }
       this.filesForShow = this.getFiles(colection.files);
       this.statusDrop = false;
     },
@@ -219,8 +226,10 @@ export default {
     loadFiles(e) {
       const newFiles = Object.values(e.target.files);
       this.changeColection(newFiles);
-      e.target.files = this.files.files;
-      this.filesForShow = this.getFiles(e.target.files);
+      if (this.files.files.length > 1) {
+        e.target.files = this.files.files;
+      }
+      this.filesForShow = this.getFiles(this.files.files);
     },
 
     getFiles(colection) {
@@ -279,6 +288,42 @@ export default {
 
 
 <style lang="scss">
+.contacts {
+  width: 100%;
+  max-width: calc(#{$body-width} - 50px);
+  min-height: 638px;
+  background: #ffffff;
+  box-shadow: 2px 10px 28px rgba(75, 0, 129, 0.12);
+  border-radius: 10px;
+  padding: 60px;
+  box-sizing: border-box;
+  & > h1 {
+    font-family: $ns;
+    display: flex;
+    width: 100%;
+    max-width: 147px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 33px;
+    letter-spacing: 0.01em;
+    color: $base-color;
+    margin: 0 auto;
+    position: relative;
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 160px;
+      height: 2px;
+      background: $base-color;
+      border-radius: 2px;
+    }
+  }
+}
+
 .feedback {
   display: flex;
   flex-direction: column;
@@ -560,6 +605,19 @@ export default {
         }
       }
     }
+  }
+}
+
+@include mq(768, max) {
+  .contacts {
+    width: 100%;
+    max-width: calc(#{$body-width} - 50px);
+    min-height: 638px;
+    background: #ffffff;
+    box-shadow: 2px 10px 28px rgba(75, 0, 129, 0.12);
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
   }
 }
 
